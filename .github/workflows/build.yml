@@ -118,5 +118,4 @@ jobs:
           ls -la dist
           gh release create "$GITHUB_REF_NAME" dist/*.zip \
             --title "Semitone ${GITHUB_REF_NAME#v}" \
-            --notes-file RELEASE_NOTES.md \
-            --prerelease
+            --notes-file RELEASE_NOTES.md
