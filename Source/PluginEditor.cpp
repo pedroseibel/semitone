@@ -183,14 +183,13 @@ namespace
            #if JUCE_MAC
             return PanelFace { "DIN Condensed", "Bold", 1.0f };
            #else
-            // Windows 10 and later ship Bahnschrift, Microsoft's DIN. Use its condensed
-            // semibold if the system exposes it; otherwise squeeze the regular width.
+            // Windows 10 and later ship Bahnschrift, Microsoft's DIN. Its condensed widths are
+            // instances of a variable font, and JUCE 8.0.4 draws those with the advance widths
+            // of the regular width (letters come out narrow but spaced far apart). So take the
+            // regular-width bold and squeeze it, which keeps outlines and spacing consistent.
             const juce::String family = juce::Font::findAllTypefaceNames().contains ("Bahnschrift") ? "Bahnschrift" : "Arial";
             const auto styles = juce::Font::findAllTypefaceStyles (family);
-            for (const char* wanted : { "SemiBold Condensed", "Bold Condensed", "Condensed" })
-                if (styles.contains (wanted))
-                    return PanelFace { family, wanted, 1.0f };
-            return PanelFace { family, styles.contains ("SemiBold") ? "SemiBold" : "Bold", 0.76f };
+            return PanelFace { family, styles.contains ("Bold") ? "Bold" : "Regular", 0.72f };
            #endif
         }();
         return face;
@@ -516,8 +515,8 @@ void KeyButton::paintButton (juce::Graphics& g, bool, bool)
 
     g.setColour (ui::ink);
     g.setFont (ui::label (13.0f, 0.06f));
-    g.drawText (getButtonText().toUpperCase(), key.withTrimmedLeft (21.0f).withTrimmedRight (3.0f).translated (0.0f, 1.0f),
-                juce::Justification::centredLeft, false);
+    g.drawFittedText (getButtonText().toUpperCase(), key.withTrimmedLeft (21.0f).withTrimmedRight (3.0f).translated (0.0f, 1.0f).toNearestInt(),
+                      juce::Justification::centredLeft, 1, 0.75f);
 }
 
 //==============================================================================
@@ -767,7 +766,7 @@ void SemitoneEditor::paint (juce::Graphics& g)
     {
         g.setColour (ui::ink);
         g.setFont (ui::label (13.0f, 0.08f));
-        g.drawText (row->fader.getTitle().toUpperCase(), row->labelArea.toFloat().translated (0.0f, 1.0f), juce::Justification::centredLeft, false);
+        g.drawFittedText (row->fader.getTitle().toUpperCase(), row->labelArea.translated (0, 1), juce::Justification::centredLeft, 1, 0.75f);
         chip (row->valueArea, row->format (row->fader.getValue()));
     }
 }
