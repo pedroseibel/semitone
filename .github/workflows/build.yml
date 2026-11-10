@@ -116,6 +116,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           ls -la dist
-          gh release create "$GITHUB_REF_NAME" dist/*.zip \
-            --title "Semitone ${GITHUB_REF_NAME#v}" \
-            --notes-file RELEASE_NOTES.md
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            # the release already exists (the tag was rebuilt): refresh its files and notes
+            gh release upload "$GITHUB_REF_NAME" dist/*.zip --clobber
+            gh release edit "$GITHUB_REF_NAME" --notes-file RELEASE_NOTES.md
+          else
+            gh release create "$GITHUB_REF_NAME" dist/*.zip \
+              --title "Semitone ${GITHUB_REF_NAME#v}" \
+              --notes-file RELEASE_NOTES.md
+          fi
