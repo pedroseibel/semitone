@@ -1,0 +1,12 @@
+Semitone for Windows (64-bit, Windows 10 or later)
+
+Install
+  Semitone.vst3   ->  C:\Program Files\Common Files\VST3\
+                      (copy the whole Semitone.vst3 folder)
+  Semitone.exe    ->  anywhere (standalone version, optional)
+
+Then restart your DAW and rescan plug-ins.
+
+This build is not code-signed, so Windows may warn before running Semitone.exe.
+
+Source code and licence (AGPL-3.0): see the project page on GitHub.

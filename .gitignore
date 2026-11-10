@@ -1,0 +1,9 @@
+# build output
+build/
+Tests/out/
+Tests/engine_test
+
+# local JUCE checkout (CMake downloads JUCE 8.0.4 when this folder is absent)
+JUCE/
+
+.DS_Store
